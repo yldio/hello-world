@@ -42,6 +42,10 @@ big-time@2.x.x:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/big-time/-/big-time-2.0.0.tgz#70193b60faff72c96ed52331b555490e604d7ccc"
 
+"bluebird@>= 2.3.2 < 3":
+  version "2.11.0"
+  resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-2.11.0.tgz#534b9033c022c9579c56ba3b3e5a5caafbb650e1"
+
 boom@6.x.x:
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/boom/-/boom-6.0.0.tgz#9b36c52a12afab3f0e55536131b7fd5021aad0cc"
@@ -288,6 +292,17 @@ path-key@^2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/path-key/-/path-key-2.0.1.tgz#411cadb574c5a140d3a4b1910d40d80cc9f40b40"
 
+penseur@^8.6.1:
+  version "8.6.1"
+  resolved "https://registry.yarnpkg.com/penseur/-/penseur-8.6.1.tgz#a39db5a897375063b431ad808ae092d2b4d0c458"
+  dependencies:
+    boom "7.x.x"
+    bounce "1.x.x"
+    hoek "5.x.x"
+    joi "13.x.x"
+    radix62 "1.x.x"
+    rethinkdb "2.3.x"
+
 pez@4.x.x:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/pez/-/pez-4.0.1.tgz#d698ecf9a146c9188d74abe5cef7b5cb71deb3b5"
@@ -313,11 +328,21 @@ punycode@2.x.x:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.1.0.tgz#5f863edc89b96db09074bad7947bf09056ca4e7d"
 
+radix62@1.x.x:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/radix62/-/radix62-1.0.1.tgz#cc2f27a49543b44ddaac712380409354bbe009a5"
+
 request-ip@~2.0.1:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/request-ip/-/request-ip-2.0.2.tgz#deeae6d4af21768497db8cd05fa37143f8f1257e"
   dependencies:
     is_js "^0.9.0"
+
+rethinkdb@2.3.x:
+  version "2.3.3"
+  resolved "https://registry.yarnpkg.com/rethinkdb/-/rethinkdb-2.3.3.tgz#3dc6586e22fa1dabee0d254e64bd0e379fad2f72"
+  dependencies:
+    bluebird ">= 2.3.2 < 3"
 
 rollbar@2.3.5:
   version "2.3.5"
