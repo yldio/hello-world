@@ -2,6 +2,9 @@ const Hapi = require('hapi');
 const ReadMeta = require('./read-meta');
 const Rollover = require('rollover');
 const Main = require('apr-main');
+const { lookup } = require('mz/dns');
+const Os = require('os');
+
 
 const { PORT = 3000, NODE_ENV = 'development', HOST = '0.0.0.0' } = process.env;
 
@@ -35,5 +38,7 @@ Main(async () => {
   });
 
   await server.start();
-  console.log(`server started at http://localhost:${server.info.port}`);
+
+  const hostname = await lookup(Os.hostname(), 4);
+  console.log(`server started at http://${hostname[0]}:${server.info.port}`);
 });
