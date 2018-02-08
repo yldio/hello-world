@@ -1,50 +1,41 @@
 const Hapi = require('hapi');
-const ReadMeta = require('./read-meta');
-const Rollover = require('rollover');
-const Main = require('apr-main');
 const Penseur = require('penseur');
-const { lookup } = require('mz/dns');
-const Os = require('os');
+const Intercept = require('apr-intercept');
+const Main = require('apr-main');
 
 const Heroes = require('./heroes.json');
+const ReadMeta = require('./read-meta');
 
 const {
   PORT = 3000,
   NODE_ENV = 'development',
   HOST = '0.0.0.0',
-  RDB_HOST = '0.0.0.0',
+  DB_HOST = '0.0.0.0',
   RDB_PORT = 28015
 } = process.env;
 
 Main(async () => {
-  const port = await ReadMeta('PORT', PORT);
-  const host = await ReadMeta('HOST', HOST);
-  const ROLLBAR_TOKEN = await ReadMeta('ROLLBAR_TOKEN');
-  const rdb_host = await ReadMeta('RDB_HOST', RDB_HOST);
-  const rdb_port = await ReadMeta('RDB_PORT', RDB_PORT);
+  // get database hostname from metadata
+  const db_host = await ReadMeta('DB_HOST', DB_HOST);
 
   const db = new Penseur.Db('main', {
-    host: rdb_host,
-    port: rdb_port
+    host: db_host,
+    port: RDB_PORT
   });
 
-  await db.establish(['heroes']);
+  // try to connect to db
+  const [err1] = await Intercept(db.establish(['heroes']));
+  if (err1) console.error(err1);
 
-  await db.heroes.insert(Heroes);
+  if (!err1) {
+    // try to insert values into db
+    const [err2] = await Intercept(await db.heroes.insert(Heroes));
+    if (err2) console.error(err2);
+  }
 
   const server = Hapi.server({
-    port,
-    host
-  });
-
-  await server.register({
-    plugin: Rollover,
-    options: {
-      rollbar: {
-        accessToken: ROLLBAR_TOKEN,
-        reportLevel: 'error'
-      }
-    }
+    port: PORT,
+    host: HOST
   });
 
   server.route({
@@ -52,7 +43,16 @@ Main(async () => {
     path: '/',
     config: {
       handler: async (request, h) => {
-        const heroes = await db.heroes.all();
+        let heroes = {};
+
+        if (!err1 && !err2) {
+          const [err3, res] = await Intercept(db.heroes.all());
+          if (err3) console.error(err1);
+          if (!err3) heroes = res;
+        } else {
+          heroes = Heroes;
+        }
+
         return h.response(JSON.stringify(heroes)).type('application/json');
       }
     }
@@ -60,6 +60,5 @@ Main(async () => {
 
   await server.start();
 
-  const hostname = await lookup(Os.hostname(), 4);
-  console.log(`server started at http://${hostname[0]}:${server.info.port}`);
+  console.log(`server started at http://${HOST}:${server.info.port}`);
 });
