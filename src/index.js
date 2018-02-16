@@ -27,9 +27,9 @@ Main(async () => {
   const [err1] = await Intercept(db.establish(['heroes']));
   if (err1) console.error(err1);
 
-  if (!err1) {
+  if (db.heroes) {
     // try to insert values into db
-    const [err2] = await Intercept(await db.heroes.insert(Heroes));
+    const [err2] = await Intercept(db.heroes.insert(Heroes));
     if (err2) console.error(err2);
   }
 
@@ -45,7 +45,7 @@ Main(async () => {
       handler: async (request, h) => {
         let heroes = {};
 
-        if (!err1 && !err2) {
+        if (db.heroes) {
           const [err3, res] = await Intercept(db.heroes.all());
           if (err3) console.error(err1);
           if (!err3) heroes = res;
