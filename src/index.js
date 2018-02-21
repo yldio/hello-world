@@ -7,7 +7,7 @@ const Heroes = require('./heroes.json');
 const ReadMeta = require('./read-meta');
 
 const {
-  PORT = 3000,
+  PORT = 80,
   NODE_ENV = 'development',
   HOST = '0.0.0.0',
   DB_HOST = '0.0.0.0',

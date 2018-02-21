@@ -6,7 +6,7 @@ sudo apt-get install -y nodejs git
 git clone https://github.com/yldio/hello-world.git
 cd hello-world
 npm install
-node .
+sudo node .
 ```
 
 ```bash
